@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>PS43 EdTech Engine – Cameroon Portal</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #f3f5f4;
+        --sf: #fff;
+        --tx: #14211c;
+        --mu: #5b6b64;
+        --ln: #dbe3df;
+        --gr: #007a5e;
+        --grs: #e0f2ec;
+        --go: #fdbb2f;
+        --gos: #fdf1d3;
+        --nv: #002d62;
+        --nvs: #e1e8f2;
+        --rd: #ce1126;
+        --rds: #fbe3e6;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0e1714;
+          --sf: #17231f;
+          --tx: #e9f0ed;
+          --mu: #9bada5;
+          --ln: #2a3b35;
+          --gr: #2fb592;
+          --grs: #143d33;
+          --gos: #40330f;
+          --nv: #7fa6e0;
+          --nvs: #17294a;
+          --rd: #ff5a6c;
+          --rds: #46171d;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0e1714;
+        --sf: #17231f;
+        --tx: #e9f0ed;
+        --mu: #9bada5;
+        --ln: #2a3b35;
+        --gr: #2fb592;
+        --grs: #143d33;
+        --gos: #40330f;
+        --nv: #7fa6e0;
+        --nvs: #17294a;
+        --rd: #ff5a6c;
+        --rds: #46171d;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        color-scheme: light dark;
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--tx);
+        font:
+          15px/1.5 Arial,
+          Helvetica,
+          sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      .disp {
+        font-family: Oswald, "Arial Narrow", Impact, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        margin: 0;
+        font-weight: 700;
+      }
+      button,
+      select,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 3px solid var(--go);
+        outline-offset: 2px;
+      }
+      header {
+        background: #007a5e;
+        color: #fff;
+        padding: 14px 16px;
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .top h1 {
+        font-size: 26px;
+        line-height: 1.1;
+      }
+      .top small {
+        display: block;
+        opacity: 0.85;
+        font-family: Arial;
+        text-transform: none;
+        letter-spacing: 0;
+        font-weight: 400;
+        font-size: 13px;
+      }
+      select {
+        background: var(--sf);
+        border: 1px solid var(--ln);
+        border-radius: 8px;
+        padding: 8px 10px;
+      }
+      header select {
+        border: 0;
+        color: #14211c;
+        background: #fff;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .kpi {
+        background: rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+      .kpi b {
+        font:
+          700 28px Oswald,
+          Impact,
+          sans-serif;
+        display: block;
+        line-height: 1.1;
+      }
+      .kpi span {
+        font-size: 12px;
+        opacity: 0.9;
+      }
+      nav {
+        background: var(--sf);
+        border-bottom: 1px solid var(--ln);
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 5;
+      }
+      nav .wrap {
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        padding: 0 8px;
+      }
+      nav button {
+        background: none;
+        border: 0;
+        border-bottom: 3px solid transparent;
+        padding: 12px 14px;
+        white-space: nowrap;
+        color: var(--mu);
+        font-weight: 700;
+      }
+      nav button[aria-selected="true"] {
+        color: var(--gr);
+        border-color: var(--gr);
+      }
+      main {
+        padding: 18px 16px 60px;
+      }
+      .sec {
+        display: none;
+      }
+      .sec.on {
+        display: block;
+      }
+      .bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .bar input[type="search"] {
+        flex: 1 1 200px;
+        border: 1px solid var(--ln);
+        border-radius: 8px;
+        padding: 8px 10px;
+        background: var(--sf);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 14px;
+      }
+      .card {
+        background: var(--sf);
+        border: 1px solid var(--ln);
+        border-radius: 12px;
+        padding: 14px;
+      }
+      .card h3 {
+        font-size: 18px;
+        margin-bottom: 2px;
+      }
+      .mu {
+        color: var(--mu);
+        font-size: 13px;
+      }
+      .b {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: 99px;
+        padding: 2px 9px;
+        margin: 2px 3px 2px 0;
+      }
+      .ok {
+        background: var(--grs);
+        color: var(--gr);
+      }
+      .wn {
+        background: var(--gos);
+        color: #8a5a00;
+      }
+      .er {
+        background: var(--rds);
+        color: var(--rd);
+      }
+      .nt {
+        background: var(--nvs);
+        color: var(--nv);
+      }
+      @media (prefers-color-scheme: dark) {
+        .wn {
+          color: var(--go);
+        }
+      }
+      .btn {
+        border: 0;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-weight: 700;
+        background: var(--gr);
+        color: #fff;
+      }
+      .btn.alt {
+        background: var(--nvs);
+        color: var(--nv);
+      }
+      .btn.gh {
+        background: none;
+        border: 1px solid var(--ln);
+        color: var(--tx);
+      }
+      .btn.sm {
+        padding: 5px 9px;
+        font-size: 13px;
+      }
+      @media (prefers-color-scheme: dark) {
+        .btn:not(.alt):not(.gh) {
+          color: #06211a;
+        }
+      }
+      .rd {
+        height: 8px;
+        border-radius: 9px;
+        background: var(--ln);
+        overflow: hidden;
+        margin: 8px 0 4px;
+      }
+      .rd i {
+        display: block;
+        height: 100%;
+        background: var(--gr);
+        transition: width 0.5s;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .cand {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: center;
+        border-top: 1px solid var(--ln);
+        padding: 7px 0;
+        font-size: 14px;
+      }
+      .sw {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+      }
+      .sw input {
+        width: 42px;
+        height: 24px;
+        accent-color: var(--gr);
+      }
+      form label {
+        display: block;
+        font-weight: 700;
+        font-size: 13px;
+        margin: 10px 0 3px;
+      }
+      form input[type="text"],
+      form input[type="number"],
+      form select {
+        width: 100%;
+        border: 1px solid var(--ln);
+        border-radius: 8px;
+        padding: 9px;
+        background: var(--sf);
+      }
+      .chk {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        margin: 3px 10px 3px 0;
+        font-weight: 400;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 16px;
+      }
+      dialog {
+        border: 0;
+        border-radius: 14px;
+        padding: 20px;
+        max-width: min(520px, 94vw);
+        width: 100%;
+        background: var(--sf);
+        color: var(--tx);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+      }
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.5);
+      }
+      #toast {
+        position: fixed;
+        left: 50%;
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        transform: translate(-50%, 30px);
+        background: var(--nv);
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 10px;
+        opacity: 0;
+        transition: 0.25s;
+        z-index: 20;
+        pointer-events: none;
+        max-width: 92vw;
+      }
+      @media (prefers-color-scheme: dark) {
+        #toast {
+          background: #e9f0ed;
+          color: #14211c;
+        }
+      }
+      #toast.on {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      .note {
+        background: var(--gos);
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-bottom: 14px;
+        font-size: 14px;
+      }
+      h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: var(--gr);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <div class="top">
+          <h1>
+            PS43 EdTech Engine<small
+              >Cameroon Portal · Building Bridges to Education</small
+            >
+          </h1>
+          <label
+            >View as
+            <select id="persona" aria-label="Switch role">
+              <option value="admin">Admin Dashboard</option>
+              <option value="field">
+                Field Representative / School Director
+              </option>
+              <option value="partner">Local Partner / Contractor</option>
+            </select></label
+          >
+        </div>
+        <div class="kpis" id="kpis"></div>
+      </div>
+    </header>
+  </body>
+</html>
