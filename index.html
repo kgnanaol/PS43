@@ -1312,7 +1312,7 @@
           ? vp
               .map(
                 (p) =>
-                  `<article class="card"><h3>${esc(p.name)}</h3><div class="mu">${esc(p.address || "")} · ${RG[p.region][L]}${p.capacity ? " · " + p.capacity + " " + T("stu") : ""}</div><div><span class="b ok">${T("ver")}</span><span class="b nt">${p.done} ${T("done")}</span></div><div>${chips(flat(p.offers))}</div><div style="margin-top:8px"><button class="btn alt sm" data-pd="${p.id}">${T("view")}</button></div></article>`,
+                  `<article class="card"><h3>${esc(p.name)}</h3><div class="mu">${esc(p.address || "")} · ${RG[p.region][L]}${p.capacity ? " · " + p.capacity + " " + T("stu") : ""}</div><div><span class="b ok">${T("ver")}</span><span class="b nt">${p.done} ${T("done")}</span></div><div>${chips(flat(p.offers))}</div><div style="margin-top:8px"><button class="btn sm" data-pd="${p.id}">${T("view")}</button></div></article>`,
               )
               .join("")
           : `<p class="mu">${T("none")}</p>`;
