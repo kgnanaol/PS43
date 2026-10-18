@@ -12,6 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap"
     />
     <style>
+      /* Colour tokens: PS43 brand colours. The dark values apply automatically when the device is in dark mode. */
       :root {
         --bg: #f3f5f4;
         --sf: #fff;
@@ -169,6 +170,7 @@
       .kpi span {
         font-size: 12px;
       }
+      /* Layout and components */
       nav {
         background: var(--sf);
         border-bottom: 1px solid var(--ln);
@@ -368,6 +370,7 @@
           grid-template-columns: 1fr;
         }
       }
+      /* SMS simulator */
       .phone {
         max-width: 340px;
         margin: 0 auto;
@@ -417,6 +420,7 @@
         flex: 1;
         min-width: 0;
       }
+      /* Pop-up and toast */
       dialog {
         border: 0;
         border-radius: 14px;
@@ -475,6 +479,7 @@
     </style>
   </head>
   <body>
+    <!-- Header: title, role switch, language switch, KPI counters (filled by script) -->
     <header>
       <div class="wrap">
         <div class="top">
@@ -494,8 +499,10 @@
         <div class="kpis" id="kpis"></div>
       </div>
     </header>
+    <!-- Tab bar (filled by script, depends on the selected role) -->
     <nav><div class="wrap" role="tablist" id="tabs"></div></nav>
     <main class="wrap">
+      <!-- Tab: needs map (SVG map + school cards) -->
       <section class="sec" id="t_map">
         <div id="mapbox">
           <div id="svgw"></div>
@@ -511,6 +518,7 @@
         </div>
         <div class="grid" id="schools"></div>
       </section>
+      <!-- Tab: matching (calls PS43.match) -->
       <section class="sec" id="t_match">
         <div class="row" style="margin-bottom: 10px">
           <h2 data-i="t_match"></h2>
@@ -518,6 +526,7 @@
         </div>
         <div class="grid" id="matches"></div>
       </section>
+      <!-- Tab: intake forms (school request / partner sign-up) and offline queue -->
       <section class="sec" id="t_intake">
         <div class="row" style="margin-bottom: 10px">
           <div class="tog" style="min-width: 260px">
@@ -545,6 +554,7 @@
           </div>
         </div>
       </section>
+      <!-- Tab: SMS simulator -->
       <section class="sec" id="t_sms">
         <div class="cols">
           <div class="phone">
@@ -569,6 +579,7 @@
           </div>
         </div>
       </section>
+      <!-- Tab: partner directory -->
       <section class="sec" id="t_partners">
         <div class="grid" id="partners"></div>
       </section>
@@ -576,10 +587,14 @@
         <button class="btn gh sm" data-reset data-i="reset"></button>
       </p>
     </main>
+    <!-- Shared pop-up and toast message -->
     <dialog id="dlg"></dialog>
     <div id="toast" role="status" aria-live="polite"></div>
+    <!-- script.js: data + matching (teammate). The inline script below is the user interface. -->
     <script src="script.js"></script>
     <script>
+      // ===== Reference data =====
+      // RG: region code -> [English name, French name].
       const RG = {
         AR: ["Adamawa", "Adamaoua"],
         CR: ["Centre", "Centre"],
@@ -592,6 +607,7 @@
         SWR: ["Southwest", "Sud-Ouest"],
         WR: ["West", "Ouest"],
       };
+      // RC: fallback map position [lon, lat] per region, used when a record has no coordinates.
       const RC = {
         AR: [13, 6.9],
         CR: [11.5, 4.6],
@@ -604,6 +620,7 @@
         SWR: [9.2, 4.9],
         WR: [10.4, 5.5],
       };
+      // CATS: the checkbox categories (and their sub-options) on each form. Ticking a category reveals its sub-options.
       const CATS = {
         school: {
           infrastructure: ["roofing", "flooring", "walls"],
@@ -619,15 +636,21 @@
           transportation: ["buses"],
         },
       };
+      // SJ: categories that reveal the "subject" question. CP: categories that reveal the "capacity" question.
+      // SUBJ: subject options.
       const SJ = { school: ["supplies"], partner: ["supplies", "staffing"] },
         CP = ["furniture", "supplies", "transportation"],
         SUBJ = ["science", "math", "engineering", "arts", "technology"];
+      // SUBCAT: sub-need -> school category (e.g. roofing -> infrastructure). Used to read SMS requests.
       const SUBCAT = {};
       Object.entries(CATS.school).forEach(([c, l]) =>
         l.forEach((s) => (SUBCAT[s] = c)),
       );
+      // Rough outline of Cameroon as "lon,lat" pairs. Schematic only (Google Maps would replace it).
       const OUTLINE =
         "8.5,4.6 9.7,4 9.9,2.9 9.8,2.3 11.3,2.2 16.1,2.2 16.2,3.5 15.2,4.3 14.6,5.9 15.1,7.5 14.5,8.7 15,10 15.4,11.2 14.5,13.1 13.8,12.2 13.6,11 13.3,9.6 12,8 11,6.6 10,6.9 9.4,6.2 8.9,5.5";
+      // ===== Translations =====
+      // D: key -> [English, French]. Add a key here, then use T("key") in the page.
       const D = {
         title: ["PS43 EdTech Engine", "Moteur EdTech PS43"],
         sub: [
@@ -725,6 +748,7 @@
           "Can we contact you for details?",
           "Pouvons-nous vous contacter ?",
         ],
+        tickc: ["Check to confirm", "Cocher pour confirmer"],
         role: ["Your role in the school", "Votre rôle à l’école"],
         yname: ["Your name", "Votre nom"],
         infrastructure: ["Infrastructure", "Infrastructure"],
@@ -791,6 +815,9 @@
         t_v: ["Partner verified", "Partenaire vérifié"],
         contact: ["Contact", "Contact"],
       };
+      // ===== App state =====
+      // L: language (0 English, 1 French). persona: admin | field | partner. tab: current tab. fk: visible form (school | partner).
+      // off: offline switch. MR: match results by school id. SMS: simulator chat log. Q: offline queue.
       let L = 0;
       try {
         L = +localStorage.getItem("ps43lang") || 0;
@@ -805,6 +832,8 @@
       try {
         Q = JSON.parse(localStorage.getItem("ps43q") || "[]");
       } catch (e) {}
+      // ===== Helpers =====
+      // T(key): translate. $(selector): find an element. esc(text): make text safe before putting it in innerHTML.
       const T = (k) => (D[k] ? D[k][L] : k),
         $ = (s) => document.querySelector(s),
         esc = (t) =>
@@ -819,6 +848,7 @@
           localStorage.setItem("ps43lang", L);
         } catch (e) {}
       };
+      // Shows a short message at the bottom of the screen.
       function toast(m) {
         const t = $("#toast");
         t.textContent = m;
@@ -826,6 +856,8 @@
         clearTimeout(toast.h);
         toast.h = setTimeout(() => t.classList.remove("on"), 2600);
       }
+      // S() / P(): current schools / partners from script.js. flat(needs): needs object -> flat list of sub-needs.
+      // chips(list, colour): list of needs as coloured badges.
       const S = () => PS43.schools(),
         P = () => PS43.partners(),
         flat = (n) =>
@@ -834,11 +866,15 @@
         l
           .map((x) => `<span class="b ${c || "nt"}">${esc(T(x))}</span>`)
           .join("");
+      // TABS: which tabs each role can see (the first one opens by default).
       const TABS = {
         admin: ["t_map", "t_match", "t_intake", "t_sms", "t_partners"],
         field: ["t_intake", "t_sms", "t_map"],
         partner: ["t_intake", "t_partners"],
       };
+      // ===== Drawing the page =====
+      // Each function below redraws one part of the page from the current data.
+      // stat(): translates the fixed labels, draws the KPI counters, fills the region filter.
       function stat() {
         document
           .querySelectorAll("[data-i]")
@@ -867,6 +903,7 @@
             .join("");
         f.value = v;
       }
+      // tabs(): draws the tab bar for the current role and shows the current tab.
       function tabs() {
         const l = TABS[persona];
         if (!l.includes(tab)) tab = l[0];
@@ -880,6 +917,7 @@
           .querySelectorAll(".sec")
           .forEach((s) => s.classList.toggle("on", s.id === tab));
       }
+      // pos(record): converts a record's [lon, lat] (or its region) to x,y on the 400x560 map.
       const pos = (r) => {
         let [lo, la] = r.ll || RC[r.region] || [12, 6];
         if (!r.ll) {
@@ -888,6 +926,7 @@
         }
         return [(lo - 8) * 45, (13.5 - la) * 45];
       };
+      // mapv(): draws the map, its legend, and the filtered list of school cards.
       function mapv() {
         const pt = OUTLINE.split(" ")
           .map((p) => {
@@ -929,6 +968,7 @@
               .join("")
           : `<p class="mu">${T("none")}</p>`;
       }
+      // matchv(): draws the Matching tab (calls PS43.match results stored in MR).
       function matchv() {
         $("#matches").innerHTML = S()
           .map((s) => {
@@ -947,6 +987,7 @@
           })
           .join("");
       }
+      // partnersv(): draws the partner cards.
       function partnersv() {
         $("#partners").innerHTML = P()
           .map(
@@ -955,6 +996,7 @@
           )
           .join("");
       }
+      // queuev(): draws the offline sync queue and the Online/Offline badge.
       function queuev() {
         $("#qb").textContent = Q.length + " " + T("k_q").toLowerCase();
         $("#queue").innerHTML = Q.length
@@ -966,12 +1008,15 @@
         $("#net").className = "b " + (off ? "er" : "ok");
         $("#net").textContent = T(off ? "off" : "on");
       }
+      // smsv(): draws the SMS simulator chat.
       function smsv() {
         $("#sl").innerHTML = SMS.map(
           (m) => `<div class="bub ${m.f}">${esc(m.t)}</div>`,
         ).join("");
         $("#sl").scrollTop = 1e5;
       }
+      // ===== Forms =====
+      // fld(): one labelled form field. formHTML(kind): builds the school or partner form.
       function fld(k, i, req) {
         return `<label>${T(k)}${req ? " *" : ""}${i}</label>`;
       }
@@ -992,7 +1037,7 @@
               `<label class="chk"><input type="checkbox" data-sj value="${s}"> ${T(s)}</label>`,
           )
           .join("")}</div>`;
-        const ct = `<label class="chk"><input type="checkbox" name="ctok"> <b>${T("contactq")}</b></label><div class="sub" data-ct hidden>${fld("role", `<select name="role">${["teacher", "principal", "staff", "oth"].map((r) => `<option>${T(r)}</option>`).join("")}</select>`)}${fld("yname", '<input type="text" name="cname">')}${fld("phone", '<input type="text" name="cphone">')}${fld("email", '<input type="email" name="cemail">')}</div>`;
+        const ct = `<span class="f">${T("contactq")}</span><label class="chk"><input type="checkbox" name="ctok"> ${T("tickc")}</label><div class="sub" data-ct hidden>${fld("role", `<select name="role">${["teacher", "principal", "staff", "oth"].map((r) => `<option>${T(r)}</option>`).join("")}</select>`)}${fld("yname", '<input type="text" name="cname">')}${fld("phone", '<input type="text" name="cphone">')}${fld("email", '<input type="email" name="cemail">')}</div>`;
         return `<form class="card" data-k="${kind}" ${kind === fk ? "" : "hidden"}>${fld(
           "region",
           `<select name="region" required><option value="">${T("selreg")}</option>${Object.keys(
@@ -1008,6 +1053,7 @@ ${sc ? fld("phone", '<input type="text" name="phone">') : fld("email", '<input t
 ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld("why", '<input type="text" name="why" required>', 1) + fld("other", '<textarea name="comments" rows="2"></textarea>')}
 <p class="mu">${T("consent")}</p><button class="btn">${T("submit")}</button></form>`;
       }
+      // forms(): (re)builds both forms. Note: this clears anything typed, so avoid calling it while someone is filling in a form.
       function forms() {
         $("#forms").innerHTML = formHTML("school") + formHTML("partner");
         document.querySelectorAll("#forms form").forEach(sync);
@@ -1015,6 +1061,7 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
           .querySelectorAll("[data-fk]")
           .forEach((b) => b.classList.toggle("alt", b.dataset.fk !== fk));
       }
+      // sync(form): shows or hides the follow-up questions (sub-options, subject, capacity, contact) based on what is ticked.
       function sync(f) {
         const k = f.dataset.k,
           on = [...f.querySelectorAll("[data-cat]")]
@@ -1030,6 +1077,7 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
         const ct = f.querySelector("[data-ct]");
         if (ct) ct.hidden = !f.ctok.checked;
       }
+      // collect(form): reads a form into a record in the shape script.js expects.
       function collect(f) {
         const k = f.dataset.k,
           g = (n) => (f[n] ? f[n].value : ""),
@@ -1074,6 +1122,8 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
         }
         return r;
       }
+      // ===== SMS simulator =====
+      // sendSms(text): reads "PS43 <REGION> <STUDENTS> <need,need> <School name>", saves it with PS43.store, and adds a reply.
       function sendSms(t) {
         SMS.push({ f: "u", t });
         const w = t.trim().split(/\s+/),
@@ -1112,6 +1162,8 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
         SMS.push({ f: "s", t: reply });
         all();
       }
+      // ===== Pop-ups and page refresh =====
+      // open(html): shows the shared pop-up window.
       function open(h) {
         const d = $("#dlg");
         d.innerHTML =
@@ -1119,6 +1171,7 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
           `<div style="margin-top:14px;text-align:right"><button class="btn gh" data-x>${T("close")}</button></div>`;
         d.showModal();
       }
+      // all(): redraws everything. Called after any change.
       function all() {
         stat();
         tabs();
@@ -1128,6 +1181,10 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
         queuev();
         smsv();
       }
+      // ===== Events =====
+      // One click handler for every button. Each button carries a data-* attribute that says what it does:
+      // data-t tab, data-d school details, data-fk switch form, data-fm find match, data-all match all, data-cm confirm match,
+      // data-v verify partner, data-ex SMS example, data-reset reset demo, data-x close pop-up.
       document.addEventListener("click", (e) => {
         const el = e.target.closest("[data-s],[data-q]");
         if (el && !e.target.closest("button")) {
@@ -1184,6 +1241,7 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
           forms();
         }
       });
+      // detail(id) / detailP(id): pop-ups for a school / a partner.
       function detail(id) {
         const s = S().find((x) => x.id === id),
           pa = P().find((p) => p.id === s.partnerId);
@@ -1203,6 +1261,7 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
           `<h3>${esc(p.name)}</h3><p class="mu">${esc(p.address || "")} · ${RG[p.region][L]}</p><span class="b ${p.verified ? "ok" : "wn"}">${T(p.verified ? "ver" : "pen")}</span><div>${chips(flat(p.offers))}</div>${p.why ? `<p>${esc(p.why)}</p>` : ""}`,
         );
       }
+      // Form events: tick boxes update the follow-up questions; submit saves (or queues when "offline"); SMS form sends a text.
       document.addEventListener("change", (e) => {
         const f = e.target.closest("#forms form");
         if (f) sync(f);
@@ -1238,6 +1297,7 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
         }
       });
       ["#q", "#fr"].forEach((s) => $(s).addEventListener("input", mapv));
+      // Role switch, language switch and the offline toggle (going back online syncs the queue).
       $("#persona").addEventListener("change", (e) => {
         persona = e.target.value;
         tab = TABS[persona][0];
@@ -1264,6 +1324,7 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
         }
         all();
       });
+      // ===== Start-up =====
       $("#lang").value = L;
       SMS.push({ f: "s", t: "PS43: " + T("smsbad").split(": ")[1] });
       forms();
