@@ -14,9 +14,9 @@
     <style>
       /* Colour tokens: PS43 brand colours. The dark values apply automatically when the device is in dark mode. */
       :root {
-        --bg: #f3f5f4;
-        --sf: #fff;
-        --tx: #14211c;
+        --bg: #fdbb2f;
+        --sf: #FFF8EA;
+        --tx: #e9f0ed;
         --mu: #5b6b64;
         --ln: #dbe3df;
         --gr: #007a5e;
@@ -33,10 +33,10 @@
       }
       @media (prefers-color-scheme: dark) {
         :root:not([data-theme="light"]) {
-          --bg: #0e1714;
-          --sf: #17231f;
-          --tx: #e9f0ed;
-          --mu: #9bada5;
+          --bg: #fdbb2f;
+          --sf: #FFF8EA;
+          --tx: #002d62;
+          --mu: #335781;
           --ln: #2a3b35;
           --gr: #2fb592;
           --grs: #143d33;
@@ -48,10 +48,10 @@
         }
       }
       :root[data-theme="dark"] {
-        --bg: #0e1714;
-        --sf: #17231f;
-        --tx: #e9f0ed;
-        --mu: #9bada5;
+        --bg: #fdbb2f;
+        --sf: #FED682;
+        --tx: #002d62;
+        --mu: #335781;
         --ln: #2a3b35;
         --gr: #2fb592;
         --grs: #143d33;
@@ -232,7 +232,7 @@
       }
       .mu {
         color: var(--mu);
-        font-size: 13px;
+        font-size: 15px;
       }
       .b {
         display: inline-block;
@@ -243,19 +243,19 @@
         margin: 2px 3px 2px 0;
       }
       .ok {
-        background: var(--grs);
+        background: #CCE4DF;
         color: var(--gr);
       }
       .wn {
-        background: var(--gos);
+        background: #FEEBC1   ;
         color: #8a5a00;
       }
       .er {
-        background: var(--rds);
+        background: #F5CFD3 ;
         color: var(--rd);
       }
       .nt {
-        background: var(--nvs);
+        background: #CCD5E0;
         color: var(--nv);
       }
       @media (prefers-color-scheme: dark) {
@@ -629,11 +629,8 @@
         },
         partner: {
           structure: ["roofing", "flooring", "walls"],
-          furniture: ["desks", "chairs"],
           supplies: ["notebooks", "textbooks", "pens"],
-          staffing: ["teachers", "janitors", "admin"],
           technology: ["electricity", "internet"],
-          transportation: ["buses"],
         },
       };
       // SJ: categories that reveal the "subject" question. CP: categories that reveal the "capacity" question.
@@ -745,6 +742,12 @@
           "Autre chose à nous dire ?",
         ],
         contactq: [
+          //"Can we contact you for details?",
+          //"Pouvons-nous vous contacter ?",
+          "Check to confirm",
+          "...",
+        ],
+        contactPrompt: [
           "Can we contact you for details?",
           "Pouvons-nous vous contacter ?",
         ],

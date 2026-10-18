@@ -23,16 +23,16 @@
     schools: [
       {id:1,region:'LR',name:'Lycée Bilingue de Douala',address:'Akwa, Douala',students:1250,needs:{technology:['devices']},subjects:[],ll:[9.70,4.05],status:'open'},
       {id:2,region:'CR',name:'GBHS Yaoundé',address:'Bastos, Yaoundé',students:980,needs:{technology:['electricity','devices']},subjects:[],ll:[11.52,3.87],status:'open'},
-      {id:3,region:'NWR',name:'Government Primary School Bamenda',address:'Up Station, Bamenda',students:410,needs:{technology:['electricity'],supplies:['notebooks','textbooks']},subjects:['math'],ll:[10.16,5.96],status:'open'},
+      {id:3,region:'NWR',name:'Government Primary School Bamenda',address:'Up Station, Bamenda',students:410,needs:{technology:['electricity'],supplies:['notebooks','textbooks']},subjects:[],ll:[10.16,5.96],status:'open'},
       {id:4,region:'NR',name:'École Publique de Garoua',address:'Centre-ville, Garoua',students:620,needs:{infrastructure:['roofing'],technology:['internet']},subjects:[],ll:[13.40,9.30],status:'open'},
-      {id:5,region:'SR',name:'Collège Bilingue de Kribi',address:'Kribi',students:760,needs:{supplies:['textbooks']},subjects:['science'],ll:[9.91,2.94],status:'open'}
+      {id:5,region:'SR',name:'Collège Bilingue de Kribi',address:'Kribi',students:760,needs:{supplies:['textbooks']},subjects:[],ll:[9.91,2.94],status:'open'}
     ],
     partners: [
       {id:1,region:'LR',name:'Cameroon Solar Solutions Ltd.',address:'Douala',offers:{technology:['electricity']},subjects:[],capacity:6,verified:true,done:23,ll:[9.74,4.08]},
-      {id:2,region:'CR',name:'Central Africa Tech Outreach (CATO)',address:'Yaoundé',offers:{technology:['devices','internet'],staffing:['teachers']},subjects:['technology'],capacity:14,verified:true,done:17,ll:[11.50,3.84]},
+      {id:2,region:'CR',name:'Central Africa Tech Outreach (CATO)',address:'Yaoundé',offers:{technology:['devices','internet'],staffing:['teachers']},subjects:[],capacity:14,verified:true,done:17,ll:[11.50,3.84]},
       {id:3,region:'NR',name:'Nord-Énergie Community Builders',address:'Garoua',offers:{structure:['roofing','walls'],technology:['internet']},subjects:[],capacity:8,verified:true,done:11,ll:[13.38,9.33]},
-      {id:4,region:'NWR',name:'Bamenda Build & Supply',address:'Bamenda',offers:{technology:['electricity'],supplies:['notebooks','textbooks','pens']},subjects:['math','science'],capacity:300,verified:true,done:9,ll:[10.14,5.94]},
-      {id:5,region:'SR',name:'Kribi Education Supplies',address:'Kribi',offers:{supplies:['textbooks','notebooks']},subjects:['science','math','engineering'],capacity:500,verified:true,done:7,ll:[9.93,2.92]},
+      {id:4,region:'NWR',name:'Bamenda Build & Supply',address:'Bamenda',offers:{technology:['electricity'],supplies:['notebooks','textbooks','pens']},subjects:[],capacity:300,verified:true,done:9,ll:[10.14,5.94]},
+      {id:5,region:'SR',name:'Kribi Education Supplies',address:'Kribi',offers:{supplies:['textbooks','notebooks']},subjects:[],capacity:500,verified:true,done:7,ll:[9.93,2.92]},
       {id:6,region:'LR',name:'Réseau Éducatif Nkongsamba',address:'Nkongsamba',offers:{structure:['roofing','flooring']},subjects:[],capacity:0,verified:false,done:4,ll:[9.94,4.95]}
     ]
   };
@@ -46,7 +46,7 @@
     constructor(name, region, specialty, subSpec) { this.name = name; this.region = region; this.spec = specialty; this.subSpec = subSpec; }
   }
   // partner forms offer 'structure'; school forms ask for 'infrastructure'. same thing.
-  const SPEC = {structure: 'infrastructure', supplies: 'supplies', technology: 'technology', furniture: 'furniture', staffing: 'staffing', transportation: 'transportation'};
+  const SPEC = {structure: 'infrastructure', supplies: 'supplies', technology: 'technology'};
   // One flat Partner per category a partner offers (as in the original sample data), verified partners first.
   const listings = () => D.partners.slice().sort((a, b) => b.verified - a.verified).flatMap(p =>
     Object.entries(p.offers).map(([c, subs]) => Object.assign(new Partner(p.name, p.region, SPEC[c], subs), {ref: p})));
