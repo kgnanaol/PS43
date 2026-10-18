@@ -576,5 +576,698 @@
         <button class="btn gh sm" data-reset data-i="reset"></button>
       </p>
     </main>
+    <dialog id="dlg"></dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="script.js"></script>
+    <script>
+      const RG = {
+        AR: ["Adamawa", "Adamaoua"],
+        CR: ["Centre", "Centre"],
+        ER: ["East", "Est"],
+        FNR: ["Far North", "Extrême-Nord"],
+        LR: ["Littoral", "Littoral"],
+        NR: ["North", "Nord"],
+        NWR: ["Northwest", "Nord-Ouest"],
+        SR: ["South", "Sud"],
+        SWR: ["Southwest", "Sud-Ouest"],
+        WR: ["West", "Ouest"],
+      };
+      const RC = {
+        AR: [13, 6.9],
+        CR: [11.5, 4.6],
+        ER: [14, 4.2],
+        FNR: [14.4, 10.8],
+        LR: [10, 4.3],
+        NR: [13.4, 8.8],
+        NWR: [10.3, 6.1],
+        SR: [11.5, 2.9],
+        SWR: [9.2, 4.9],
+        WR: [10.4, 5.5],
+      };
+      const CATS = {
+        school: {
+          infrastructure: ["roofing", "flooring", "walls"],
+          supplies: ["notebooks", "textbooks", "writing"],
+          technology: ["electricity", "internet", "devices"],
+        },
+        partner: {
+          structure: ["roofing", "flooring", "walls"],
+          furniture: ["desks", "chairs"],
+          supplies: ["notebooks", "textbooks", "pens"],
+          staffing: ["teachers", "janitors", "admin"],
+          technology: ["electricity", "internet"],
+          transportation: ["buses"],
+        },
+      };
+      const SJ = { school: ["supplies"], partner: ["supplies", "staffing"] },
+        CP = ["furniture", "supplies", "transportation"],
+        SUBJ = ["science", "math", "engineering", "arts", "technology"];
+      const SUBCAT = {};
+      Object.entries(CATS.school).forEach(([c, l]) =>
+        l.forEach((s) => (SUBCAT[s] = c)),
+      );
+      const OUTLINE =
+        "8.5,4.6 9.7,4 9.9,2.9 9.8,2.3 11.3,2.2 16.1,2.2 16.2,3.5 15.2,4.3 14.6,5.9 15.1,7.5 14.5,8.7 15,10 15.4,11.2 14.5,13.1 13.8,12.2 13.6,11 13.3,9.6 12,8 11,6.6 10,6.9 9.4,6.2 8.9,5.5";
+      const D = {
+        title: ["PS43 EdTech Engine", "Moteur EdTech PS43"],
+        sub: [
+          "Cameroon Infrastructure Portal",
+          "Portail d’infrastructure du Cameroun",
+        ],
+        admin: ["PS43 admin dashboard", "Tableau de bord PS43"],
+        field: ["School staff / field rep", "Personnel scolaire / agent"],
+        partner: ["Local partner", "Partenaire local"],
+        k_s: ["Schools", "Écoles"],
+        k_m: ["Matched", "Jumelées"],
+        k_p: ["Verified partners", "Partenaires vérifiés"],
+        k_q: ["Queued offline", "En file hors ligne"],
+        t_map: ["Needs map", "Carte des besoins"],
+        t_match: ["Matching", "Jumelage"],
+        t_intake: ["Intake forms", "Formulaires"],
+        t_sms: ["SMS simulator", "Simulateur SMS"],
+        t_partners: ["Partners", "Partenaires"],
+        mapnote: [
+          "Schematic map of Cameroon. Circles are schools, squares are partners. Tap a marker for details.",
+          "Carte schématique du Cameroun. Cercles : écoles, carrés : partenaires. Touchez un marqueur.",
+        ],
+        l_open: ["Open request", "Demande ouverte"],
+        l_match: ["Matched", "Jumelée"],
+        l_ver: ["Verified partner", "Partenaire vérifié"],
+        l_pen: ["Pending partner", "Partenaire en attente"],
+        search: ["Search schools", "Rechercher une école"],
+        allreg: ["All regions", "Toutes les régions"],
+        stu: ["students", "élèves"],
+        view: ["View details", "Voir les détails"],
+        none: ["No schools match.", "Aucune école trouvée."],
+        find: ["Find partner", "Trouver un partenaire"],
+        matchall: ["Match all open requests", "Jumeler toutes les demandes"],
+        confirm: ["Confirm match", "Confirmer le jumelage"],
+        cov: ["Covered", "Couvert"],
+        gap: ["Gap", "Écart"],
+        nomatch: [
+          "No partner in this region covers this yet. This is a gap PS43 can fill.",
+          "Aucun partenaire de la région ne couvre ce besoin. PS43 peut combler cet écart.",
+        ],
+        matchedw: ["Matched with", "Jumelée avec"],
+        f_school: ["School request", "Demande d’école"],
+        f_partner: ["Partner sign-up", "Inscription partenaire"],
+        offline: [
+          "Simulate low bandwidth / offline",
+          "Simuler faible débit / hors ligne",
+        ],
+        on: ["Online", "En ligne"],
+        off: [
+          "Offline: submissions will queue",
+          "Hors ligne : les envois seront mis en file",
+        ],
+        queue: ["Sync queue", "File de synchronisation"],
+        empty: ["Nothing waiting.", "Rien en attente."],
+        submit: ["Submit", "Envoyer"],
+        consent: [
+          "School-level information only. Do not enter student names.",
+          "Informations au niveau de l’école seulement. N’indiquez pas de noms d’élèves.",
+        ],
+        region: ["Region", "Région"],
+        selreg: ["Select a region", "Choisir une région"],
+        name: ["Name", "Nom"],
+        sname: ["School name", "Nom de l’école"],
+        address: ["Address", "Adresse"],
+        students: ["Student count", "Nombre d’élèves"],
+        phone: ["Phone number", "Téléphone"],
+        email: ["Email", "Courriel"],
+        website: ["Website", "Site web"],
+        need: [
+          "Which need can we help with?",
+          "Quel besoin pouvons-nous aider à combler ?",
+        ],
+        offers: ["Products and services", "Produits et services"],
+        subjects: [
+          "Which subject needs support?",
+          "Quelle matière a besoin de soutien ?",
+        ],
+        subjects2: [
+          "Which subject does your institution specialise in?",
+          "Dans quelle matière êtes-vous spécialisé ?",
+        ],
+        cap: [
+          "Capacity of your service (number of students)",
+          "Capacité de votre service (nombre d’élèves)",
+        ],
+        why: [
+          "Why do you want to partner with PS43?",
+          "Pourquoi souhaitez-vous devenir partenaire de PS43 ?",
+        ],
+        other: [
+          "Anything else you want us to know?",
+          "Autre chose à nous dire ?",
+        ],
+        contactq: [
+          "Can we contact you for details?",
+          "Pouvons-nous vous contacter ?",
+        ],
+        role: ["Your role in the school", "Votre rôle à l’école"],
+        yname: ["Your name", "Votre nom"],
+        infrastructure: ["Infrastructure", "Infrastructure"],
+        supplies: ["Supplies", "Fournitures"],
+        technology: ["Technology", "Technologie"],
+        structure: ["Structure", "Structure"],
+        furniture: ["Furniture", "Mobilier"],
+        staffing: ["Staffing", "Personnel"],
+        transportation: ["Transportation", "Transport"],
+        roofing: ["Roofing", "Toiture"],
+        flooring: ["Flooring", "Sol"],
+        walls: ["Walls", "Murs"],
+        notebooks: ["Notebooks", "Cahiers"],
+        textbooks: ["Textbooks", "Manuels"],
+        writing: ["Writing tools", "Outils d’écriture"],
+        electricity: ["Electricity", "Électricité"],
+        internet: ["Internet", "Internet"],
+        devices: ["Devices", "Appareils"],
+        desks: ["Desks", "Bureaux"],
+        chairs: ["Chairs", "Chaises"],
+        pens: ["Pens/pencils", "Stylos/crayons"],
+        teachers: ["Teachers", "Enseignants"],
+        janitors: ["Janitors", "Concierges"],
+        admin: ["Administrative staff", "Personnel administratif"],
+        buses: ["School buses", "Autobus scolaires"],
+        science: ["Science", "Sciences"],
+        math: ["Math", "Mathématiques"],
+        engineering: ["Engineering", "Ingénierie"],
+        arts: ["Arts", "Arts"],
+        all: ["All of the above", "Tout ce qui précède"],
+        teacher: ["Teacher", "Enseignant"],
+        principal: ["Principal", "Directeur"],
+        staff: ["Staff", "Personnel"],
+        oth: ["Other", "Autre"],
+        send: ["Send", "Envoyer"],
+        smshelp: [
+          "Field staff with a basic phone can text a request. The same record lands in the dashboard, no internet needed.",
+          "Le personnel avec un téléphone de base peut envoyer une demande par SMS. Elle arrive au tableau de bord sans internet.",
+        ],
+        smscodes: [
+          "Format: PS43 REGION STUDENTS needs,separated,by,commas School name. Region codes: AR CR ER FNR LR NR NWR SR SWR WR.",
+          "Format : PS43 RÉGION ÉLÈVES besoins,séparés,par,virgules Nom de l’école. Codes : AR CR ER FNR LR NR NWR SR SWR WR.",
+        ],
+        example: ["Insert example", "Insérer un exemple"],
+        smsbad: [
+          "PS43: Could not read that. Send: PS43 NWR 240 roofing,internet School name",
+          "PS43 : Message illisible. Envoyez : PS43 NWR 240 roofing,internet Nom de l’école",
+        ],
+        smsok: ["PS43: Received", "PS43 : Reçu"],
+        ver: ["PS43 verified", "Vérifié PS43"],
+        pen: ["Pending verification", "Vérification en attente"],
+        verify: ["Verify partner", "Vérifier le partenaire"],
+        done: ["completed projects", "projets réalisés"],
+        close: ["Close", "Fermer"],
+        reset: ["Reset demo data", "Réinitialiser la démo"],
+        t_sub: ["Request submitted", "Demande envoyée"],
+        t_q: ["Saved to offline queue", "Enregistré dans la file hors ligne"],
+        t_sync: ["queued items synced", "éléments synchronisés"],
+        t_need: [
+          "Choose at least one need or service",
+          "Choisissez au moins un besoin ou service",
+        ],
+        t_cm: ["Match confirmed", "Jumelage confirmé"],
+        t_v: ["Partner verified", "Partenaire vérifié"],
+        contact: ["Contact", "Contact"],
+      };
+      let L = 0;
+      try {
+        L = +localStorage.getItem("ps43lang") || 0;
+      } catch (e) {}
+      let persona = "admin",
+        tab = "t_map",
+        fk = "school",
+        off = false,
+        MR = {},
+        SMS = [],
+        Q = [];
+      try {
+        Q = JSON.parse(localStorage.getItem("ps43q") || "[]");
+      } catch (e) {}
+      const T = (k) => (D[k] ? D[k][L] : k),
+        $ = (s) => document.querySelector(s),
+        esc = (t) =>
+          String(t).replace(
+            /[&<>"]/g,
+            (c) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+          );
+      const sv = () => {
+        try {
+          localStorage.setItem("ps43q", JSON.stringify(Q));
+          localStorage.setItem("ps43lang", L);
+        } catch (e) {}
+      };
+      function toast(m) {
+        const t = $("#toast");
+        t.textContent = m;
+        t.classList.add("on");
+        clearTimeout(toast.h);
+        toast.h = setTimeout(() => t.classList.remove("on"), 2600);
+      }
+      const S = () => PS43.schools(),
+        P = () => PS43.partners(),
+        flat = (n) =>
+          Object.entries(n || {}).flatMap(([c, l]) => (l.length ? l : [c]));
+      const chips = (l, c) =>
+        l
+          .map((x) => `<span class="b ${c || "nt"}">${esc(T(x))}</span>`)
+          .join("");
+      const TABS = {
+        admin: ["t_map", "t_match", "t_intake", "t_sms", "t_partners"],
+        field: ["t_intake", "t_sms", "t_map"],
+        partner: ["t_intake", "t_partners"],
+      };
+      function stat() {
+        document
+          .querySelectorAll("[data-i]")
+          .forEach((e) => (e.textContent = T(e.dataset.i)));
+        document
+          .querySelectorAll("[data-p]")
+          .forEach((e) => (e.placeholder = T(e.dataset.p)));
+        $("#kpis").innerHTML = [
+          [S().length, "k_s"],
+          [S().filter((s) => s.status === "matched").length, "k_m"],
+          [P().filter((p) => p.verified).length, "k_p"],
+          [Q.length, "k_q"],
+        ]
+          .map(
+            (k) =>
+              `<div class="kpi"><b>${k[0]}</b><span>${T(k[1])}</span></div>`,
+          )
+          .join("");
+        $("#smsin").placeholder = "PS43 NWR 240 roofing School";
+        const f = $("#fr"),
+          v = f.value;
+        f.innerHTML =
+          `<option value="">${T("allreg")}</option>` +
+          Object.keys(RG)
+            .map((k) => `<option value="${k}">${RG[k][L]}</option>`)
+            .join("");
+        f.value = v;
+      }
+      function tabs() {
+        const l = TABS[persona];
+        if (!l.includes(tab)) tab = l[0];
+        $("#tabs").innerHTML = l
+          .map(
+            (t) =>
+              `<button role="tab" data-t="${t}" aria-selected="${t === tab}">${T(t)}</button>`,
+          )
+          .join("");
+        document
+          .querySelectorAll(".sec")
+          .forEach((s) => s.classList.toggle("on", s.id === tab));
+      }
+      const pos = (r) => {
+        let [lo, la] = r.ll || RC[r.region] || [12, 6];
+        if (!r.ll) {
+          lo += ((r.id % 9) - 4) * 0.13;
+          la += (((r.id >> 3) % 9) - 4) * 0.1;
+        }
+        return [(lo - 8) * 45, (13.5 - la) * 45];
+      };
+      function mapv() {
+        const pt = OUTLINE.split(" ")
+          .map((p) => {
+            const [a, b] = p.split(",");
+            return (
+              ((a - 8) * 45).toFixed(0) + "," + ((13.5 - b) * 45).toFixed(0)
+            );
+          })
+          .join(" ");
+        const sc = S()
+          .map((s) => {
+            const [x, y] = pos(s);
+            return `<circle data-s="${s.id}" cx="${x}" cy="${y}" r="10" fill="var(${s.status === "matched" ? "--gr" : "--rd"})" stroke="#fff" stroke-width="2"><title>${esc(s.name)}</title></circle>`;
+          })
+          .join("");
+        const pr = P()
+          .map((p) => {
+            const [x, y] = pos(p);
+            return `<rect data-q="${p.id}" x="${x - 6}" y="${y - 6}" width="12" height="12" fill="var(${p.verified ? "--nv" : "--go"})" stroke="#fff" stroke-width="2"><title>${esc(p.name)}</title></rect>`;
+          })
+          .join("");
+        $("#svgw").innerHTML =
+          `<svg viewBox="0 0 400 560" role="img" aria-label="Map"><polygon points="${pt}" fill="var(--grs)" stroke="var(--gr)" stroke-width="2"/>${pr}${sc}</svg>`;
+        $("#legend").innerHTML =
+          `<span class="b er">● ${T("l_open")}</span><span class="b ok">● ${T("l_match")}</span><span class="b nt">■ ${T("l_ver")}</span><span class="b wn">■ ${T("l_pen")}</span>`;
+        const q = $("#q").value.toLowerCase(),
+          r = $("#fr").value,
+          l = S().filter(
+            (s) =>
+              (!q || (s.name + s.address).toLowerCase().includes(q)) &&
+              (!r || s.region === r),
+          );
+        $("#schools").innerHTML = l.length
+          ? l
+              .map(
+                (s) =>
+                  `<article class="card"><h3>${esc(s.name)}</h3><div class="mu">${esc(s.address || "")} · ${RG[s.region][L]} · ${s.students} ${T("stu")}</div><div>${chips(flat(s.needs))}</div><div class="row" style="margin-top:8px"><span class="b ${s.status === "matched" ? "ok" : "er"}">${T(s.status === "matched" ? "l_match" : "l_open")}</span><button class="btn sm" data-d="${s.id}">${T("view")}</button></div></article>`,
+              )
+              .join("")
+          : `<p class="mu">${T("none")}</p>`;
+      }
+      function matchv() {
+        $("#matches").innerHTML = S()
+          .map((s) => {
+            const m = MR[s.id],
+              pa = P().find((p) => p.id === s.partnerId);
+            let body = "";
+            if (s.status === "matched")
+              body = `<span class="b ok">${T("matchedw")} ${esc(pa ? pa.name : "")}</span>`;
+            else {
+              body = `<button class="btn sm" data-fm="${s.id}">${T("find")}</button>`;
+              if (m === null) body += `<p class="mu">${T("nomatch")}</p>`;
+              else if (m)
+                body += `<div style="margin-top:8px"><b>${esc(m.partner.name)}</b>${m.partner.verified ? ` <span class="b ok">${T("ver")}</span>` : ""}<div>${(m.covered || []).length ? `<span class="mu">${T("cov")}:</span> ${chips(m.covered, "ok")}` : ""}</div><div>${(m.gaps || []).length ? `<span class="mu">${T("gap")}:</span> ${chips(m.gaps, "er")}` : ""}</div><button class="btn alt sm" data-cm="${s.id},${m.partner.id}">${T("confirm")}</button></div>`;
+            }
+            return `<article class="card"><h3>${esc(s.name)}</h3><div class="mu">${RG[s.region][L]}</div><div>${chips(flat(s.needs))}</div>${body}</article>`;
+          })
+          .join("");
+      }
+      function partnersv() {
+        $("#partners").innerHTML = P()
+          .map(
+            (p) =>
+              `<article class="card"><h3>${esc(p.name)}</h3><div class="mu">${esc(p.address || "")} · ${RG[p.region][L]}${p.capacity ? " · " + p.capacity + " " + T("stu") : ""}</div><div><span class="b ${p.verified ? "ok" : "wn"}">${T(p.verified ? "ver" : "pen")}</span><span class="b nt">${p.done} ${T("done")}</span></div><div>${chips(flat(p.offers))}</div>${p.subjects && p.subjects.length ? `<div class="mu">${p.subjects.map(T).join(", ")}</div>` : ""}${!p.verified && persona === "admin" ? `<button class="btn alt sm" data-v="${p.id}" style="margin-top:8px">${T("verify")}</button>` : ""}</article>`,
+          )
+          .join("");
+      }
+      function queuev() {
+        $("#qb").textContent = Q.length + " " + T("k_q").toLowerCase();
+        $("#queue").innerHTML = Q.length
+          ? Q.map(
+              (x) =>
+                `<div style="padding:6px 0;border-top:1px solid var(--ln)">${esc(x.rec.name)}<br><span class="mu">${T(x.kind === "school" ? "f_school" : "f_partner")}</span></div>`,
+            ).join("")
+          : T("empty");
+        $("#net").className = "b " + (off ? "er" : "ok");
+        $("#net").textContent = T(off ? "off" : "on");
+      }
+      function smsv() {
+        $("#sl").innerHTML = SMS.map(
+          (m) => `<div class="bub ${m.f}">${esc(m.t)}</div>`,
+        ).join("");
+        $("#sl").scrollTop = 1e5;
+      }
+      function fld(k, i, req) {
+        return `<label>${T(k)}${req ? " *" : ""}${i}</label>`;
+      }
+      function formHTML(kind) {
+        const sc = kind === "school",
+          c = CATS[kind];
+        const need = Object.entries(c)
+          .map(
+            ([k, l]) =>
+              `<div><label class="chk"><input type="checkbox" data-cat="${k}"> <b>${T(k)}</b></label><div class="sub" data-subs="${k}" hidden>${l.map((s) => `<label class="chk"><input type="checkbox" data-sub="${k}" value="${s}"> ${T(s)}</label>`).join("")}</div></div>`,
+          )
+          .join("");
+        const subj = `<div data-sj hidden><span class="f">${T(sc ? "subjects" : "subjects2")}</span>${SUBJ.concat(
+          sc ? [] : ["all"],
+        )
+          .map(
+            (s) =>
+              `<label class="chk"><input type="checkbox" data-sj value="${s}"> ${T(s)}</label>`,
+          )
+          .join("")}</div>`;
+        const ct = `<label class="chk"><input type="checkbox" name="ctok"> <b>${T("contactq")}</b></label><div class="sub" data-ct hidden>${fld("role", `<select name="role">${["teacher", "principal", "staff", "oth"].map((r) => `<option>${T(r)}</option>`).join("")}</select>`)}${fld("yname", '<input type="text" name="cname">')}${fld("phone", '<input type="text" name="cphone">')}${fld("email", '<input type="email" name="cemail">')}</div>`;
+        return `<form class="card" data-k="${kind}" ${kind === fk ? "" : "hidden"}>${fld(
+          "region",
+          `<select name="region" required><option value="">${T("selreg")}</option>${Object.keys(
+            RG,
+          )
+            .map((k) => `<option value="${k}">${RG[k][L]}</option>`)
+            .join("")}</select>`,
+          1,
+        )}
+${fld(sc ? "sname" : "name", '<input type="text" name="name" required>', 1)}${fld("address", '<input type="text" name="address" required>', 1)}${sc ? fld("students", '<input type="number" name="students" min="1" required>', 1) : fld("phone", '<input type="text" name="phone" required>', 1)}
+${sc ? fld("phone", '<input type="text" name="phone">') : fld("email", '<input type="email" name="email">')}${sc ? fld("email", '<input type="email" name="email">') : fld("website", '<input type="text" name="website">')}
+<span class="f">${T(sc ? "need" : "offers")} *</span>${need}${subj}${sc ? "" : `<div data-cp hidden>${fld("cap", '<input type="number" name="capacity" min="0">')}</div>`}
+${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld("why", '<input type="text" name="why" required>', 1) + fld("other", '<textarea name="comments" rows="2"></textarea>')}
+<p class="mu">${T("consent")}</p><button class="btn">${T("submit")}</button></form>`;
+      }
+      function forms() {
+        $("#forms").innerHTML = formHTML("school") + formHTML("partner");
+        document.querySelectorAll("#forms form").forEach(sync);
+        document
+          .querySelectorAll("[data-fk]")
+          .forEach((b) => b.classList.toggle("alt", b.dataset.fk !== fk));
+      }
+      function sync(f) {
+        const k = f.dataset.k,
+          on = [...f.querySelectorAll("[data-cat]")]
+            .filter((c) => c.checked)
+            .map((c) => c.dataset.cat);
+        f.querySelectorAll("[data-subs]").forEach(
+          (d) => (d.hidden = !on.includes(d.dataset.subs)),
+        );
+        const sj = f.querySelector("[data-sj]");
+        sj.hidden = !SJ[k].some((c) => on.includes(c));
+        const cp = f.querySelector("[data-cp]");
+        if (cp) cp.hidden = !CP.some((c) => on.includes(c));
+        const ct = f.querySelector("[data-ct]");
+        if (ct) ct.hidden = !f.ctok.checked;
+      }
+      function collect(f) {
+        const k = f.dataset.k,
+          g = (n) => (f[n] ? f[n].value : ""),
+          needs = {};
+        f.querySelectorAll("[data-cat]:checked").forEach(
+          (c) =>
+            (needs[c.dataset.cat] = [
+              ...f.querySelectorAll(`[data-sub="${c.dataset.cat}"]:checked`),
+            ].map((x) => x.value)),
+        );
+        const sj = f.querySelector("[data-sj]").hidden
+            ? []
+            : [...f.querySelectorAll("[data-sj]:checked")]
+                .map((x) => x.value)
+                .filter((x) => x),
+          r = {
+            region: g("region"),
+            name: g("name"),
+            address: g("address"),
+            phone: g("phone"),
+            email: g("email"),
+            subjects: sj,
+            comments: g("comments"),
+          };
+        if (k === "school") {
+          r.students = +g("students");
+          r.needs = needs;
+          r.contact = f.ctok.checked
+            ? {
+                ok: true,
+                role: g("role"),
+                name: g("cname"),
+                phone: g("cphone"),
+                email: g("cemail"),
+              }
+            : { ok: false };
+        } else {
+          r.website = g("website");
+          r.offers = needs;
+          r.capacity = +g("capacity") || 0;
+          r.why = g("why");
+        }
+        return r;
+      }
+      function sendSms(t) {
+        SMS.push({ f: "u", t });
+        const w = t.trim().split(/\s+/),
+          ok =
+            w[0] &&
+            w[0].toUpperCase() === "PS43" &&
+            RG[(w[1] || "").toUpperCase()] &&
+            +w[2] > 0 &&
+            w[3] &&
+            w[4];
+        let reply = T("smsbad");
+        if (ok) {
+          const subs = w[3]
+            .toLowerCase()
+            .split(",")
+            .filter((x) => SUBCAT[x]);
+          if (subs.length) {
+            const needs = {};
+            subs.forEach((x) =>
+              (needs[SUBCAT[x]] = needs[SUBCAT[x]] || []).push(x),
+            );
+            const rec = PS43.store("school", {
+              region: w[1].toUpperCase(),
+              name: w.slice(4).join(" "),
+              address: "SMS",
+              students: +w[2],
+              needs,
+              subjects: [],
+              contact: { ok: false },
+              comments: "Received by SMS",
+            });
+            reply = `${T("smsok")} “${rec.name}”, ${RG[rec.region][L]}, ${rec.students} ${T("stu")}: ${subs.map(T).join(", ")}. Ref #${String(rec.id).slice(-5)}`;
+            toast(T("t_sub"));
+          }
+        }
+        SMS.push({ f: "s", t: reply });
+        all();
+      }
+      function open(h) {
+        const d = $("#dlg");
+        d.innerHTML =
+          h +
+          `<div style="margin-top:14px;text-align:right"><button class="btn gh" data-x>${T("close")}</button></div>`;
+        d.showModal();
+      }
+      function all() {
+        stat();
+        tabs();
+        mapv();
+        matchv();
+        partnersv();
+        queuev();
+        smsv();
+      }
+      document.addEventListener("click", (e) => {
+        const el = e.target.closest("[data-s],[data-q]");
+        if (el && !e.target.closest("button")) {
+          const s = el.dataset.s ? +el.dataset.s : 0;
+          return el.dataset.s ? detail(+el.dataset.s) : detailP(+el.dataset.q);
+        }
+        const b = e.target.closest("button");
+        if (!b) return;
+        const D = b.dataset;
+        if ("x" in D) return $("#dlg").close();
+        if (D.t) {
+          tab = D.t;
+          return all();
+        }
+        if (D.d) return detail(+D.d);
+        if (D.fk) {
+          fk = D.fk;
+          return forms();
+        }
+        if (D.fm) {
+          MR[D.fm] = PS43.match(S().find((s) => s.id === +D.fm));
+          return matchv();
+        }
+        if ("all" in D) {
+          S()
+            .filter((s) => s.status !== "matched")
+            .forEach((s) => (MR[s.id] = PS43.match(s)));
+          return matchv();
+        }
+        if (D.cm) {
+          const [s, p] = D.cm.split(",").map(Number);
+          PS43.confirmMatch(s, p);
+          delete MR[s];
+          all();
+          return toast(T("t_cm"));
+        }
+        if (D.v) {
+          PS43.verify(+D.v);
+          all();
+          return toast(T("t_v"));
+        }
+        if ("ex" in D) {
+          $("#smsin").value =
+            "PS43 NWR 240 roofing,internet Bamenda Primary School";
+          return $("#smsin").focus();
+        }
+        if ("reset" in D) {
+          PS43.reset();
+          Q = [];
+          MR = {};
+          SMS = [];
+          sv();
+          all();
+          forms();
+        }
+      });
+      function detail(id) {
+        const s = S().find((x) => x.id === id),
+          pa = P().find((p) => p.id === s.partnerId);
+        open(
+          `<h3>${esc(s.name)}</h3><p class="mu">${esc(s.address || "")} · ${RG[s.region][L]} · ${s.students} ${T("stu")}</p>${Object.entries(
+            s.needs,
+          )
+            .map(([c, l]) => `<div><b>${T(c)}:</b> ${chips(l)}</div>`)
+            .join(
+              "",
+            )}${s.subjects && s.subjects.length ? `<p class="mu">${s.subjects.map(T).join(", ")}</p>` : ""}${s.contact && s.contact.ok ? `<p><b>${T("contact")}:</b> ${esc(s.contact.name || "")} (${esc(s.contact.role || "")}) ${esc(s.contact.phone || "")}</p>` : ""}${s.comments ? `<p>${esc(s.comments)}</p>` : ""}<span class="b ${s.status === "matched" ? "ok" : "er"}">${T(s.status === "matched" ? "l_match" : "l_open")}</span>${pa ? esc(pa.name) : ""}`,
+        );
+      }
+      function detailP(id) {
+        const p = P().find((x) => x.id === id);
+        open(
+          `<h3>${esc(p.name)}</h3><p class="mu">${esc(p.address || "")} · ${RG[p.region][L]}</p><span class="b ${p.verified ? "ok" : "wn"}">${T(p.verified ? "ver" : "pen")}</span><div>${chips(flat(p.offers))}</div>${p.why ? `<p>${esc(p.why)}</p>` : ""}`,
+        );
+      }
+      document.addEventListener("change", (e) => {
+        const f = e.target.closest("#forms form");
+        if (f) sync(f);
+      });
+      document.addEventListener("submit", (e) => {
+        const f = e.target;
+        if (f.id === "smsf") {
+          e.preventDefault();
+          const v = $("#smsin").value.trim();
+          if (v) {
+            $("#smsin").value = "";
+            sendSms(v);
+          }
+          return;
+        }
+        if (f.closest("#forms")) {
+          e.preventDefault();
+          const r = collect(f),
+            k = f.dataset.k;
+          if (!Object.keys(k === "school" ? r.needs : r.offers).length)
+            return toast(T("t_need"));
+          if (off) {
+            Q.push({ kind: k, rec: r });
+            sv();
+            toast(T("t_q"));
+          } else {
+            PS43.store(k, r);
+            toast(T("t_sub"));
+          }
+          f.reset();
+          sync(f);
+          all();
+        }
+      });
+      ["#q", "#fr"].forEach((s) => $(s).addEventListener("input", mapv));
+      $("#persona").addEventListener("change", (e) => {
+        persona = e.target.value;
+        tab = TABS[persona][0];
+        fk = persona === "partner" ? "partner" : "school";
+        forms();
+        all();
+      });
+      $("#lang").addEventListener("change", (e) => {
+        L = +e.target.value;
+        sv();
+        document.documentElement.lang = L ? "fr" : "en";
+        forms();
+        all();
+      });
+      $("#off").addEventListener("change", (e) => {
+        off = e.target.checked;
+        if (!off && Q.length) {
+          const n = Q.length;
+          Q.forEach((x) => PS43.store(x.kind, x.rec));
+          Q = [];
+          sv();
+          all();
+          return toast(n + " " + T("t_sync"));
+        }
+        all();
+      });
+      $("#lang").value = L;
+      SMS.push({ f: "s", t: "PS43: " + T("smsbad").split(": ")[1] });
+      forms();
+      all();
+    </script>
   </body>
 </html>
