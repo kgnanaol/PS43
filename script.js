@@ -1,5 +1,4 @@
-
-//creates partner object
+//creates partner class
 class Partner{
      constructor(name, region, specialty, subSpec){
         this.name = name;
@@ -8,7 +7,6 @@ class Partner{
         this.subSpec = subSpec;
      }
 }
-
 
 //example partners from each region
 const P1 = new Partner("abc", "AR", "infastrcuture", ["roofing", "flooring"]);
