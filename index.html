@@ -14,7 +14,7 @@
     <style>
       :root {
         --bg: #f3f5f4;
-        --sf: #fff;
+        --sf: #ffffff;
         --tx: #14211c;
         --mu: #5b6b64;
         --ln: #dbe3df;
@@ -32,8 +32,8 @@
       }
       @media (prefers-color-scheme: dark) {
         :root:not([data-theme="light"]) {
-          --bg: #0e1714;
-          --sf: #17231f;
+          --bg: #ffffff;
+          --sf: #ffffff;
           --tx: #e9f0ed;
           --mu: #9bada5;
           --ln: #2a3b35;
@@ -47,10 +47,10 @@
         }
       }
       :root[data-theme="dark"] {
-        --bg: #0e1714;
-        --sf: #17231f;
+        --bg: #ffffff;
+        --sf: #ffffff;
         --tx: #e9f0ed;
-        --mu: #9bada5;
+        --mu: #c7e2d6;
         --ln: #2a3b35;
         --gr: #2fb592;
         --grs: #143d33;
@@ -612,11 +612,8 @@
         },
         partner: {
           structure: ["roofing", "flooring", "walls"],
-          furniture: ["desks", "chairs"],
           supplies: ["notebooks", "textbooks", "pens"],
-          staffing: ["teachers", "janitors", "admin"],
           technology: ["electricity", "internet"],
-          transportation: ["buses"],
         },
       };
       const SJ = { school: ["supplies"], partner: ["supplies", "staffing"] },
@@ -722,6 +719,12 @@
           "Autre chose à nous dire ?",
         ],
         contactq: [
+          //"Can we contact you for details?",
+          //"Pouvons-nous vous contacter ?",
+          "Check to confirm",
+          "...",
+        ],
+        contactPrompt: [
           "Can we contact you for details?",
           "Pouvons-nous vous contacter ?",
         ],
