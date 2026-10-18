@@ -15,3 +15,28 @@ What it does:
 - SMS simulator: shows how someone with a basic phone could send a request with no internet.
 - English / French: the whole interface switches language.
 - Three roles: PS43 admin, school staff / field rep, and local partner. Each sees the tabs they need.
+
+Useage instructuions:
+Have the index.html and the script.js in the same folder. Open the html file, it should open to the homepage. You can navigate using the nav bar and switch the view you see by the first dropdown menu at the top. There is also an option to switch into French. 
+
+There is a button at the bottom to reset data to the default test data we provided. 
+
+Files included in the repo: 
+	-index.html : The user interface of the project includes html, css and javascript.
+	-script.js : The logic of the user interface, contains the data and algorithms.
+	-ps43-foundation_logo_dark.png : A png of the black PS43 logo.
+	-ps43-foundation_logo_white.png : A png of the white PS43 logo.
+
+Prototype limitations:
+  -Each instant is saved locally. 
+  -The SMS and Sync Queue are simply demos, they are not actually functional. 
+  -The view dropdown only changes visibility. 
+  -Switching language or view from the dropdown menus all new data. 
+  -The Map page is an approximation of regions, does not account for actual addresses. 
+
+  Future work:
+  -GPS location verification.
+  -CAPTCHA verification.
+  -Implementing a more accurate map (Google Map integration).
+  -2-factor verification to confirm the information provided is accurate.
+  -Convert into an app form where partners can accept or deny the matched schools. 
