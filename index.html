@@ -6,18 +6,18 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>PS43 EdTech Engine – Cameroon Infrastructure Portal</title>
+    <title>PS43 Cameroon Crossover – Cameroon Infrastructure Portal</title>
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap"
     />
     <style>
-      /* Colour tokens: PS43 brand colours. The dark values apply automatically when the device is in dark mode. */
+      /* Colour tokens: one light theme (gold page, cream cards, navy text, green header). */
       :root {
         --bg: #fdbb2f;
-        --sf: #FFF8EA;
-        --tx: #e9f0ed;
-        --mu: #5b6b64;
+        --sf: #fff8ea;
+        --tx: #002d62;
+        --mu: #335781;
         --ln: #dbe3df;
         --gr: #007a5e;
         --grs: #e0f2ec;
@@ -31,41 +31,11 @@
         padding-top: env(safe-area-inset-top, 0px);
         padding-bottom: env(safe-area-inset-bottom, 0px);
       }
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          --bg: #fdbb2f;
-          --sf: #FFF8EA;
-          --tx: #002d62;
-          --mu: #335781;
-          --ln: #2a3b35;
-          --gr: #2fb592;
-          --grs: #143d33;
-          --gos: #40330f;
-          --nv: #7fa6e0;
-          --nvs: #17294a;
-          --rd: #ff5a6c;
-          --rds: #46171d;
-        }
-      }
-      :root[data-theme="dark"] {
-        --bg: #fdbb2f;
-        --sf: #FED682;
-        --tx: #002d62;
-        --mu: #335781;
-        --ln: #2a3b35;
-        --gr: #2fb592;
-        --grs: #143d33;
-        --gos: #40330f;
-        --nv: #7fa6e0;
-        --nvs: #17294a;
-        --rd: #ff5a6c;
-        --rds: #46171d;
-      }
       * {
         box-sizing: border-box;
       }
       html {
-        color-scheme: light dark;
+        color-scheme: light;
       }
       body {
         margin: 0;
@@ -114,6 +84,16 @@
         gap: 12px;
         align-items: center;
         justify-content: space-between;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .logo {
+        height: 56px;
+        width: auto;
+        flex: none;
       }
       .top h1 {
         font-size: 26px;
@@ -243,25 +223,20 @@
         margin: 2px 3px 2px 0;
       }
       .ok {
-        background: #CCE4DF;
+        background: #cce4df;
         color: var(--gr);
       }
       .wn {
-        background: #FEEBC1   ;
+        background: #feebc1;
         color: #8a5a00;
       }
       .er {
-        background: #F5CFD3 ;
+        background: #f5cfd3;
         color: var(--rd);
       }
       .nt {
-        background: #CCD5E0;
+        background: #ccd5e0;
         color: var(--nv);
-      }
-      @media (prefers-color-scheme: dark) {
-        .wn {
-          color: var(--go);
-        }
       }
       .btn {
         border: 0;
@@ -283,11 +258,6 @@
       .btn.sm {
         padding: 5px 9px;
         font-size: 13px;
-      }
-      @media (prefers-color-scheme: dark) {
-        .btn:not(.alt):not(.gh) {
-          color: #06211a;
-        }
       }
       .row {
         display: flex;
@@ -405,11 +375,6 @@
         background: var(--sf);
         border: 1px solid var(--ln);
       }
-      @media (prefers-color-scheme: dark) {
-        .bub.u {
-          color: #06211a;
-        }
-      }
       #smsf {
         display: flex;
         gap: 6px;
@@ -449,12 +414,6 @@
         pointer-events: none;
         max-width: 92vw;
       }
-      @media (prefers-color-scheme: dark) {
-        #toast {
-          background: #e9f0ed;
-          color: #14211c;
-        }
-      }
       #toast.on {
         opacity: 1;
         transform: translate(-50%, 0);
@@ -483,10 +442,19 @@
     <header>
       <div class="wrap">
         <div class="top">
-          <h1><span data-i="title"></span><small data-i="sub"></small></h1>
+          <div class="brand">
+            <img
+              class="logo"
+              src="data:image/png;base64,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"
+              alt="PS43 Foundation"
+              width="66"
+              height="56"
+            />
+            <h1><span data-i="title"></span><small data-i="sub"></small></h1>
+          </div>
           <div class="ctl">
             <select id="persona" aria-label="Role">
-              <option value="admin" data-i="admin"></option>
+              <option value="admin" data-i="r_admin"></option>
               <option value="field" data-i="field"></option>
               <option value="partner" data-i="partner"></option>
             </select>
@@ -517,6 +485,8 @@
           ></select>
         </div>
         <div class="grid" id="schools"></div>
+        <h2 data-i="k_p" style="margin-top: 26px"></h2>
+        <div class="grid" id="mpartners"></div>
       </section>
       <!-- Tab: matching (calls PS43.match) -->
       <section class="sec" id="t_match">
@@ -591,7 +561,374 @@
     <dialog id="dlg"></dialog>
     <div id="toast" role="status" aria-live="polite"></div>
     <!-- script.js: data + matching (teammate). The inline script below is the user interface. -->
-    <script src="script.js"></script>
+    <script>
+      /* =====================================================================
+   PS43 data + matching module (script.js)
+
+   index.html only talks to the PS43 object at the bottom of this file.
+   Keep the function names and data shapes below and everything else keeps working.
+
+   RECORD SHAPES
+   school  = { id, region, name, address, students, phone, email,
+               needs: { infrastructure: [roofing, flooring, walls],
+                        supplies:       [notebooks, textbooks, writing],
+                        technology:     [electricity, internet, devices] },
+               subjects: [science, math, engineering, arts, technology],
+               contact: { ok, role, name, phone, email }, comments,
+               status: 'open' | 'matched', partnerId, ll: [lon, lat] (optional) }
+   partner = { id, region, name, address, phone, email, website,
+               offers: { structure:  [roofing, flooring, walls],
+                         supplies:   [notebooks, textbooks, pens],
+                         technology: [electricity, internet] },
+               subjects: [...or 'all'], capacity, why,
+               verified: true | false, done, ll: [lon, lat] (optional) }
+
+   REGION CODES: AR CR ER FNR LR NR NWR SR SWR WR
+   (Adamawa, Centre, East, Far North, Littoral, North, Northwest, South, Southwest, West)
+
+   COMMENT STYLE
+   Public functions use a short REQUIRES / MODIFIES / EFFECTS contract:
+     REQUIRES  what must be true before the call (JavaScript does not enforce this).
+     MODIFIES  what state the call changes ("nothing" if it only reads).
+     EFFECTS   what the call does and returns, assuming REQUIRES holds.
+
+   PUBLIC API (used by index.html)
+     PS43.schools() / PS43.partners()     -> arrays
+     PS43.store(kind, record)             -> saves a 'school' or 'partner' record, returns it
+     PS43.match(school)                   -> { partner, covered: [...], gaps: [...] } or null
+     PS43.confirmMatch(schoolId, partnerId), PS43.verify(partnerId), PS43.reset()
+   ===================================================================== */
+      (function () {
+        // localStorage key. Change the suffix whenever the data shape changes, so old saved data is ignored.
+        const KEY = "ps43data2";
+        // Sample data shown on first load and after reset(). Replace with real data or a database later.
+        const SEED = {
+          schools: [
+            {
+              id: 1,
+              region: "LR",
+              name: "Lycée Bilingue de Douala",
+              address: "Akwa, Douala",
+              students: 1250,
+              needs: { technology: ["devices"] },
+              subjects: [],
+              ll: [9.7, 4.05],
+              status: "open",
+            },
+            {
+              id: 2,
+              region: "CR",
+              name: "GBHS Yaoundé",
+              address: "Bastos, Yaoundé",
+              students: 980,
+              needs: { technology: ["electricity", "devices"] },
+              subjects: [],
+              ll: [11.52, 3.87],
+              status: "open",
+            },
+            {
+              id: 3,
+              region: "NWR",
+              name: "Government Primary School Bamenda",
+              address: "Up Station, Bamenda",
+              students: 410,
+              needs: {
+                technology: ["electricity"],
+                supplies: ["notebooks", "textbooks"],
+              },
+              subjects: [],
+              ll: [10.16, 5.96],
+              status: "open",
+            },
+            {
+              id: 4,
+              region: "NR",
+              name: "École Publique de Garoua",
+              address: "Centre-ville, Garoua",
+              students: 620,
+              needs: { infrastructure: ["roofing"], technology: ["internet"] },
+              subjects: [],
+              ll: [13.4, 9.3],
+              status: "open",
+            },
+            {
+              id: 5,
+              region: "SR",
+              name: "Collège Bilingue de Kribi",
+              address: "Kribi",
+              students: 760,
+              needs: { supplies: ["textbooks"] },
+              subjects: [],
+              ll: [9.91, 2.94],
+              status: "open",
+            },
+          ],
+          partners: [
+            {
+              id: 1,
+              region: "LR",
+              name: "Cameroon Solar Solutions Ltd.",
+              address: "Douala",
+              offers: { technology: ["electricity"] },
+              subjects: [],
+              capacity: 6,
+              verified: true,
+              done: 23,
+              ll: [9.74, 4.08],
+            },
+            {
+              id: 2,
+              region: "CR",
+              name: "Central Africa Tech Outreach (CATO)",
+              address: "Yaoundé",
+              offers: {
+                technology: ["devices", "internet"],
+                staffing: ["teachers"],
+              },
+              subjects: [],
+              capacity: 14,
+              verified: true,
+              done: 17,
+              ll: [11.5, 3.84],
+            },
+            {
+              id: 3,
+              region: "NR",
+              name: "Nord-Énergie Community Builders",
+              address: "Garoua",
+              offers: {
+                structure: ["roofing", "walls"],
+                technology: ["internet"],
+              },
+              subjects: [],
+              capacity: 8,
+              verified: true,
+              done: 11,
+              ll: [13.38, 9.33],
+            },
+            {
+              id: 4,
+              region: "NWR",
+              name: "Bamenda Build & Supply",
+              address: "Bamenda",
+              offers: {
+                technology: ["electricity"],
+                supplies: ["notebooks", "textbooks", "pens"],
+              },
+              subjects: [],
+              capacity: 300,
+              verified: true,
+              done: 9,
+              ll: [10.14, 5.94],
+            },
+            {
+              id: 5,
+              region: "SR",
+              name: "Kribi Education Supplies",
+              address: "Kribi",
+              offers: { supplies: ["textbooks", "notebooks"] },
+              subjects: [],
+              capacity: 500,
+              verified: true,
+              done: 7,
+              ll: [9.93, 2.92],
+            },
+            {
+              id: 6,
+              region: "LR",
+              name: "Réseau Éducatif Nkongsamba",
+              address: "Nkongsamba",
+              offers: { structure: ["roofing", "flooring"] },
+              subjects: [],
+              capacity: 0,
+              verified: false,
+              done: 4,
+              ll: [9.94, 4.95],
+            },
+          ],
+        };
+        // Deep copy, so changing D never changes SEED.
+        const clone = (o) => JSON.parse(JSON.stringify(o));
+        // D is the live dataset {schools, partners}: loaded from localStorage if present, otherwise a copy of SEED.
+        let D = null;
+        try {
+          D = JSON.parse(localStorage.getItem(KEY));
+        } catch (e) {}
+        D = D || clone(SEED);
+        // Writes D to localStorage. Errors (private browsing, storage full) are ignored so the demo never crashes.
+        const save = () => {
+          try {
+            localStorage.setItem(KEY, JSON.stringify(D));
+          } catch (e) {}
+        };
+        // ---- Matching helpers --------------------------------------------------
+        // Partner: one flat "listing" = one partner offering one category in one region.
+        class Partner {
+          constructor(name, region, specialty, subSpec) {
+            this.name = name;
+            this.region = region;
+            this.spec = specialty;
+            this.subSpec = subSpec;
+          }
+        }
+        // Translates partner category names to school category names.
+        // The partner form says 'structure', the school form says 'infrastructure'. They mean the same thing.
+        const SPEC = {
+          structure: "infrastructure",
+          supplies: "supplies",
+          technology: "technology",
+        };
+        /**
+         * Flattens the partner records into one Partner listing per offered category.
+         * REQUIRES: D.partners holds valid partner records.
+         * MODIFIES: nothing.
+         * EFFECTS:  returns a new array of Partner objects (each has .ref pointing to its full partner record),
+         *           verified partners first, so they win when several partners could fill a need.
+         */
+        const listings = () =>
+          D.partners
+            .slice()
+            .sort((a, b) => b.verified - a.verified)
+            .flatMap((p) =>
+              Object.entries(p.offers).map(([c, subs]) =>
+                Object.assign(new Partner(p.name, p.region, SPEC[c], subs), {
+                  ref: p,
+                }),
+              ),
+            );
+        /**
+         * The core matching rule: same region, same specialty, and the partner covers EVERY requested sub-need.
+         * REQUIRES: sRegion is a region code; sSpec is 'infrastructure' | 'supplies' | 'technology';
+         *           sSub is an array of sub-needs (an empty array means "any partner offering this category").
+         * MODIFIES: nothing.
+         * EFFECTS:  returns the first matching Partner listing (verified first), or null if none exists.
+         */
+        function matchOne(sRegion, sSpec, sSub) {
+          for (const p of listings()) {
+            if (
+              p.region === sRegion &&
+              p.spec === sSpec &&
+              sSub.every((x) => p.subSpec.includes(x))
+            )
+              return p;
+          }
+          return null;
+        }
+
+        // ---- Public API --------------------------------------------------------
+        window.PS43 = {
+          /**
+           * schools() / partners()
+           * REQUIRES: nothing.   MODIFIES: nothing.
+           * EFFECTS:  returns the live arrays (not copies). Callers should read them, and change data only through the functions below.
+           */
+          schools: () => D.schools,
+          partners: () => D.partners,
+          /**
+           * Saves a new school request or partner sign-up.
+           * REQUIRES: kind is 'school' or 'partner'; rec has the matching shape (see top of file) with a valid region code.
+           *           No validation is done here; the form checks required fields.
+           * MODIFIES: D (in memory), localStorage, and rec itself (id, status / verified / done are set).
+           * EFFECTS:  appends rec to D.schools (status 'open') or D.partners (unverified, done = 0). Returns rec.
+           */
+          store(kind, rec) {
+            rec.id = Date.now() + Math.floor(Math.random() * 1000);
+            if (kind === "school") {
+              rec.status = "open";
+              D.schools.push(rec);
+            } else {
+              rec.verified = false;
+              rec.done = 0;
+              D.partners.push(rec);
+            }
+            save();
+            return rec;
+          },
+          /**
+           * Finds the best partner for a school request.
+           * REQUIRES: s is a school record with a region code and a non-empty s.needs.
+           * MODIFIES: nothing.
+           * EFFECTS:  returns null if no partner in the school's region covers at least one requested need.
+           *           Otherwise returns { partner, covered, gaps }:
+           *             partner - the partner record covering the most requested needs (verified partners win ties)
+           *             covered - requested sub-needs that partner offers (or the category name if the school listed no sub-needs)
+           *             gaps    - requested sub-needs that partner does NOT offer
+           *           Rule: a partner who covers a whole category is used first. If none does, sub-needs are matched one at a time.
+           */
+          match(s) {
+            // hits: partner record -> list of requested needs it covers
+            const hits = new Map(),
+              add = (p, l) => hits.set(p, (hits.get(p) || []).concat(l));
+            for (const c in s.needs) {
+              // Strict rule first: one partner that covers the whole category
+              const subs = s.needs[c],
+                p = matchOne(s.region, c, subs);
+              if (p) add(p.ref, subs.length ? subs : [c]);
+              // Fallback: cover the sub-needs one at a time (they may be different partners)
+              else
+                subs.forEach((x) => {
+                  const q = matchOne(s.region, c, [x]);
+                  if (q) add(q.ref, [x]);
+                });
+            }
+            // Pick the partner that covers the most needs; verified partners get a +0.5 tiebreak
+            let best = null;
+            hits.forEach((cov, p) => {
+              if (
+                !best ||
+                cov.length + (p.verified ? 0.5 : 0) >
+                  best.covered.length + (best.partner.verified ? 0.5 : 0)
+              )
+                best = { partner: p, covered: cov };
+            });
+            if (!best) return null;
+            // gaps = everything requested that the chosen partner does not cover
+            const want = Object.entries(s.needs).flatMap(([c, l]) =>
+              l.length ? l : [c],
+            );
+            best.gaps = want.filter((x) => !best.covered.includes(x));
+            return best;
+          },
+          /**
+           * Records that a school has been matched with a partner.
+           * REQUIRES: sid and pid are ids of an existing school and partner (the partner is not checked).
+           * MODIFIES: D, localStorage.
+           * EFFECTS:  sets the school's status to 'matched' and its partnerId. Does nothing if the school is not found.
+           */
+          confirmMatch(sid, pid) {
+            const s = D.schools.find((x) => x.id === sid);
+            if (s) {
+              s.status = "matched";
+              s.partnerId = pid;
+              save();
+            }
+          },
+          /**
+           * Marks a partner as PS43-verified.
+           * REQUIRES: pid is the id of an existing partner.
+           * MODIFIES: D, localStorage.
+           * EFFECTS:  sets partner.verified = true. Does nothing if the partner is not found.
+           */
+          verify(pid) {
+            const p = D.partners.find((x) => x.id === pid);
+            if (p) {
+              p.verified = true;
+              save();
+            }
+          },
+          /**
+           * Restores the sample data.
+           * REQUIRES: nothing.
+           * MODIFIES: D, localStorage.
+           * EFFECTS:  replaces all schools and partners with a fresh copy of SEED.
+           */
+          reset() {
+            D = clone(SEED);
+            save();
+          },
+        };
+      })();
+    </script>
     <script>
       // ===== Reference data =====
       // RG: region code -> [English name, French name].
@@ -649,12 +986,12 @@
       // ===== Translations =====
       // D: key -> [English, French]. Add a key here, then use T("key") in the page.
       const D = {
-        title: ["PS43 EdTech Engine", "Moteur EdTech PS43"],
+        title: ["PS43 Cameroon Crossover", "Cameroon Crossover PS43"],
         sub: [
           "Cameroon Infrastructure Portal",
           "Portail d’infrastructure du Cameroun",
         ],
-        admin: ["PS43 admin dashboard", "Tableau de bord PS43"],
+        r_admin: ["Admin dashboard", "Tableau de bord"],
         field: ["School staff / field rep", "Personnel scolaire / agent"],
         partner: ["Local partner", "Partenaire local"],
         k_s: ["Schools", "Écoles"],
@@ -742,12 +1079,6 @@
           "Autre chose à nous dire ?",
         ],
         contactq: [
-          //"Can we contact you for details?",
-          //"Pouvons-nous vous contacter ?",
-          "Check to confirm",
-          "...",
-        ],
-        contactPrompt: [
           "Can we contact you for details?",
           "Pouvons-nous vous contacter ?",
         ],
@@ -929,7 +1260,7 @@
         }
         return [(lo - 8) * 45, (13.5 - la) * 45];
       };
-      // mapv(): draws the map, its legend, and the filtered list of school cards.
+      // mapv(): draws the map, its legend, the filtered school cards, and the verified partner cards.
       function mapv() {
         const pt = OUTLINE.split(" ")
           .map((p) => {
@@ -948,11 +1279,11 @@
         const pr = P()
           .map((p) => {
             const [x, y] = pos(p);
-            return `<rect data-q="${p.id}" x="${x - 6}" y="${y - 6}" width="12" height="12" fill="var(${p.verified ? "--nv" : "--go"})" stroke="#fff" stroke-width="2"><title>${esc(p.name)}</title></rect>`;
+            return `<rect data-q="${p.id}" x="${x + 6}" y="${y + 6}" width="12" height="12" fill="var(${p.verified ? "--nv" : "--go"})" stroke="#fff" stroke-width="2"><title>${esc(p.name)}</title></rect>`;
           })
           .join("");
         $("#svgw").innerHTML =
-          `<svg viewBox="0 0 400 560" role="img" aria-label="Map"><polygon points="${pt}" fill="var(--grs)" stroke="var(--gr)" stroke-width="2"/>${pr}${sc}</svg>`;
+          `<svg viewBox="0 0 400 560" role="img" aria-label="Map"><polygon points="${pt}" fill="var(--grs)" stroke="var(--gr)" stroke-width="2"/>${sc}${pr}</svg>`;
         $("#legend").innerHTML =
           `<span class="b er">● ${T("l_open")}</span><span class="b ok">● ${T("l_match")}</span><span class="b nt">■ ${T("l_ver")}</span><span class="b wn">■ ${T("l_pen")}</span>`;
         const q = $("#q").value.toLowerCase(),
@@ -967,6 +1298,21 @@
               .map(
                 (s) =>
                   `<article class="card"><h3>${esc(s.name)}</h3><div class="mu">${esc(s.address || "")} · ${RG[s.region][L]} · ${s.students} ${T("stu")}</div><div>${chips(flat(s.needs))}</div><div class="row" style="margin-top:8px"><span class="b ${s.status === "matched" ? "ok" : "er"}">${T(s.status === "matched" ? "l_match" : "l_open")}</span><button class="btn sm" data-d="${s.id}">${T("view")}</button></div></article>`,
+              )
+              .join("")
+          : `<p class="mu">${T("none")}</p>`;
+        // Verified partners (same search and region filter) listed under the schools
+        const vp = P().filter(
+          (p) =>
+            p.verified &&
+            (!q || (p.name + p.address).toLowerCase().includes(q)) &&
+            (!r || p.region === r),
+        );
+        $("#mpartners").innerHTML = vp.length
+          ? vp
+              .map(
+                (p) =>
+                  `<article class="card"><h3>${esc(p.name)}</h3><div class="mu">${esc(p.address || "")} · ${RG[p.region][L]}${p.capacity ? " · " + p.capacity + " " + T("stu") : ""}</div><div><span class="b ok">${T("ver")}</span><span class="b nt">${p.done} ${T("done")}</span></div><div>${chips(flat(p.offers))}</div><div style="margin-top:8px"><button class="btn alt sm" data-pd="${p.id}">${T("view")}</button></div></article>`,
               )
               .join("")
           : `<p class="mu">${T("none")}</p>`;
@@ -1203,6 +1549,7 @@ ${sc ? ct + fld("other", '<textarea name="comments" rows="2"></textarea>') : fld
           return all();
         }
         if (D.d) return detail(+D.d);
+        if (D.pd) return detailP(+D.pd);
         if (D.fk) {
           fk = D.fk;
           return forms();
