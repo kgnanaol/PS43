@@ -16,7 +16,7 @@ What it does:
 - English / French: the whole interface switches language.
 - Three roles: PS43 admin, school staff / field rep, and local partner. Each sees the tabs they need.
 
-Useage instructuions:
+Usage instructions:
 Have the index.html and the script.js in the same folder. Open the html file, it should open to the homepage. You can navigate using the nav bar and switch the view you see by the first dropdown menu at the top. There is also an option to switch into French. 
 
 There is a button at the bottom to reset data to the default test data we provided. 
