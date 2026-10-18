@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 PS43 Cameroon Crossover – Cameroon Infrastructure Portal
 Prototype for Catalyst 2026, Team #11 ("Building Bridges to Education"), built for the PS43 Foundation.
 
@@ -16,7 +15,3 @@ What it does:
 - SMS simulator: shows how someone with a basic phone could send a request with no internet.
 - English / French: the whole interface switches language.
 - Three roles: PS43 admin, school staff / field rep, and local partner. Each sees the tabs they need.
-=======
-
-
->>>>>>> 690999fb385bea84eb413ba4d34934b0c56c2fbc
