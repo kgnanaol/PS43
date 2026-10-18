@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>PS43 EdTech Engine – Cameroon Portal</title>
+    <title>PS43 EdTech Engine – Cameroon Infrastructure Portal</title>
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap"
@@ -65,7 +65,6 @@
       }
       html {
         color-scheme: light dark;
-        scroll-padding-top: env(safe-area-inset-top, 0px);
       }
       body {
         margin: 0;
@@ -78,8 +77,7 @@
       }
       h1,
       h2,
-      h3,
-      .disp {
+      h3 {
         font-family: Oswald, "Arial Narrow", Impact, sans-serif;
         text-transform: uppercase;
         letter-spacing: 0.02em;
@@ -88,7 +86,8 @@
       }
       button,
       select,
-      input {
+      input,
+      textarea {
         font: inherit;
         color: inherit;
       }
@@ -122,17 +121,26 @@
       .top small {
         display: block;
         opacity: 0.85;
-        font-family: Arial;
+        font: 400 13px Arial;
         text-transform: none;
         letter-spacing: 0;
-        font-weight: 400;
-        font-size: 13px;
       }
-      select {
-        background: var(--sf);
+      .ctl {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      select,
+      input[type="text"],
+      input[type="number"],
+      input[type="search"],
+      input[type="email"],
+      textarea {
         border: 1px solid var(--ln);
         border-radius: 8px;
         padding: 8px 10px;
+        background: var(--sf);
+        font-weight: 400;
       }
       header select {
         border: 0;
@@ -141,7 +149,7 @@
       }
       .kpis {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: 10px;
         margin-top: 14px;
       }
@@ -160,7 +168,6 @@
       }
       .kpi span {
         font-size: 12px;
-        opacity: 0.9;
       }
       nav {
         background: var(--sf);
@@ -203,12 +210,8 @@
         gap: 8px;
         margin-bottom: 14px;
       }
-      .bar input[type="search"] {
+      .bar input {
         flex: 1 1 200px;
-        border: 1px solid var(--ln);
-        border-radius: 8px;
-        padding: 8px 10px;
-        background: var(--sf);
       }
       .grid {
         display: grid;
@@ -284,19 +287,6 @@
           color: #06211a;
         }
       }
-      .rd {
-        height: 8px;
-        border-radius: 9px;
-        background: var(--ln);
-        overflow: hidden;
-        margin: 8px 0 4px;
-      }
-      .rd i {
-        display: block;
-        height: 100%;
-        background: var(--gr);
-        transition: width 0.5s;
-      }
       .row {
         display: flex;
         gap: 8px;
@@ -304,27 +294,13 @@
         align-items: center;
         justify-content: space-between;
       }
-      .cand {
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-        align-items: center;
-        border-top: 1px solid var(--ln);
-        padding: 7px 0;
-        font-size: 14px;
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 16px;
       }
-      .sw {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 700;
-      }
-      .sw input {
-        width: 42px;
-        height: 24px;
-        accent-color: var(--gr);
-      }
-      form label {
+      form label,
+      .f {
         display: block;
         font-weight: 700;
         font-size: 13px;
@@ -332,24 +308,114 @@
       }
       form input[type="text"],
       form input[type="number"],
-      form select {
+      form input[type="email"],
+      form select,
+      form textarea {
         width: 100%;
-        border: 1px solid var(--ln);
-        border-radius: 8px;
-        padding: 9px;
-        background: var(--sf);
       }
-      .chk {
+      label.chk {
         display: inline-flex;
         gap: 6px;
         align-items: center;
-        margin: 3px 10px 3px 0;
+        margin: 3px 12px 3px 0;
         font-weight: 400;
+        font-size: 14px;
       }
-      .cols {
+      .sub {
+        margin: 2px 0 6px 22px;
+        padding-left: 10px;
+        border-left: 3px solid var(--grs);
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .tog {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .tog .btn {
+        flex: 1;
+      }
+      .sw {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+      }
+      #mapbox {
+        background: var(--sf);
+        border: 1px solid var(--ln);
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 14px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: minmax(200px, 320px) 1fr;
         gap: 16px;
+        align-items: center;
+      }
+      #mapbox svg {
+        width: 100%;
+        height: auto;
+        max-height: 460px;
+      }
+      #mapbox [data-s],
+      #mapbox [data-q] {
+        cursor: pointer;
+      }
+      @media (max-width: 640px) {
+        #mapbox {
+          grid-template-columns: 1fr;
+        }
+      }
+      .phone {
+        max-width: 340px;
+        margin: 0 auto;
+        border: 8px solid #14211c;
+        border-radius: 28px;
+        background: var(--sf);
+        overflow: hidden;
+      }
+      #sl {
+        height: 340px;
+        overflow-y: auto;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: var(--bg);
+      }
+      .bub {
+        padding: 8px 11px;
+        border-radius: 14px;
+        max-width: 85%;
+        font-size: 14px;
+        word-break: break-word;
+      }
+      .bub.u {
+        align-self: flex-end;
+        background: var(--gr);
+        color: #fff;
+      }
+      .bub.s {
+        align-self: flex-start;
+        background: var(--sf);
+        border: 1px solid var(--ln);
+      }
+      @media (prefers-color-scheme: dark) {
+        .bub.u {
+          color: #06211a;
+        }
+      }
+      #smsf {
+        display: flex;
+        gap: 6px;
+        padding: 8px;
+        border-top: 1px solid var(--ln);
+      }
+      #smsf input {
+        flex: 1;
+        min-width: 0;
       }
       dialog {
         border: 0;
@@ -389,17 +455,17 @@
         opacity: 1;
         transform: translate(-50%, 0);
       }
+      h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: var(--gr);
+      }
       .note {
         background: var(--gos);
         border-radius: 10px;
         padding: 10px 12px;
         margin-bottom: 14px;
         font-size: 14px;
-      }
-      h2 {
-        font-size: 22px;
-        margin-bottom: 10px;
-        color: var(--gr);
       }
       @media (prefers-reduced-motion: reduce) {
         * {
@@ -412,24 +478,103 @@
     <header>
       <div class="wrap">
         <div class="top">
-          <h1>
-            PS43 EdTech Engine<small
-              >Cameroon Portal · Building Bridges to Education</small
-            >
-          </h1>
-          <label
-            >View as
-            <select id="persona" aria-label="Switch role">
-              <option value="admin">Admin Dashboard</option>
-              <option value="field">
-                Field Representative / School Director
-              </option>
-              <option value="partner">Local Partner / Contractor</option>
-            </select></label
-          >
+          <h1><span data-i="title"></span><small data-i="sub"></small></h1>
+          <div class="ctl">
+            <select id="persona" aria-label="Role">
+              <option value="admin" data-i="admin"></option>
+              <option value="field" data-i="field"></option>
+              <option value="partner" data-i="partner"></option>
+            </select>
+            <select id="lang" aria-label="Language">
+              <option value="0">English</option>
+              <option value="1">Français</option>
+            </select>
+          </div>
         </div>
         <div class="kpis" id="kpis"></div>
       </div>
     </header>
+    <nav><div class="wrap" role="tablist" id="tabs"></div></nav>
+    <main class="wrap">
+      <section class="sec" id="t_map">
+        <div id="mapbox">
+          <div id="svgw"></div>
+          <div>
+            <p class="mu" data-i="mapnote"></p>
+            <div id="legend"></div>
+          </div>
+        </div>
+        <div class="bar">
+          <input type="search" id="q" data-p="search" /><select
+            id="fr"
+          ></select>
+        </div>
+        <div class="grid" id="schools"></div>
+      </section>
+      <section class="sec" id="t_match">
+        <div class="row" style="margin-bottom: 10px">
+          <h2 data-i="t_match"></h2>
+          <button class="btn" data-all data-i="matchall"></button>
+        </div>
+        <div class="grid" id="matches"></div>
+      </section>
+      <section class="sec" id="t_intake">
+        <div class="row" style="margin-bottom: 10px">
+          <div class="tog" style="min-width: 260px">
+            <button class="btn" data-fk="school" data-i="f_school"></button
+            ><button
+              class="btn alt"
+              data-fk="partner"
+              data-i="f_partner"
+            ></button>
+          </div>
+          <span class="sw"
+            ><label for="off" data-i="offline"></label
+            ><input type="checkbox" id="off" role="switch"
+          /></span>
+        </div>
+        <div class="cols">
+          <div id="forms"></div>
+          <div class="card">
+            <div class="row">
+              <h3 data-i="queue"></h3>
+              <span class="b wn" id="qb"></span>
+            </div>
+            <span id="net" class="b ok"></span>
+            <div id="queue" class="mu"></div>
+          </div>
+        </div>
+      </section>
+      <section class="sec" id="t_sms">
+        <div class="cols">
+          <div class="phone">
+            <div id="sl"></div>
+            <form id="smsf">
+              <input
+                type="text"
+                id="smsin"
+                aria-label="SMS"
+                autocomplete="off"
+              /><button class="btn" data-i="send"></button>
+            </form>
+          </div>
+          <div class="card">
+            <h3 data-i="t_sms"></h3>
+            <p data-i="smshelp"></p>
+            <p>
+              <code>PS43 NW 240 roofing,internet Bamenda Primary School</code>
+            </p>
+            <p class="mu" data-i="smscodes"></p>
+            <button class="btn alt" data-ex data-i="example"></button>
+          </div>
+        </div>
+      </section>
+      <section class="sec" id="t_partners">
+        <div class="grid" id="partners"></div>
+      </section>
+      <p class="mu" style="margin-top: 24px">
+        <button class="btn gh sm" data-reset data-i="reset"></button>
+      </p>
+    </main>
   </body>
 </html>
